@@ -1,0 +1,2 @@
+<h2 class="text-center my-5">Sorry, this page isn't available.</h2>
+<div class="text-center">The link you followed may be broken, or the page may have been removed. <a href="">Go back to Home</a>.</div>

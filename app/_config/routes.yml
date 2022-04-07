@@ -1,0 +1,13 @@
+---
+Name: approutes
+After:
+  - '#rootroutes'
+  - '#coreroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'post': 'PostController'
+    'user': 'UserController'
+    'login//$Action/$ID/$Name': 'LoginController'
+    'register//$Action/$ID/$Name': 'RegisterController'
+    'explore' : 'ExploreController'
