@@ -30,9 +30,7 @@
 </head>
 
 <body>
-
     <% include Navbar %>
-
     <%-- Content --%>
     <div class="container">
         $Layout

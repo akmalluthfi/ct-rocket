@@ -13,6 +13,14 @@
         "phpunit/phpunit": "^9.5"
     },
     "extra": {
+        "expose": [
+            "themes/my-theme/css",
+            "themes/my-theme/javascript",
+            "themes/my-theme/webfonts",
+            "themes/react/css",
+            "themes/react/javascript",
+            "themes/react/webfonts"
+        ],
         "resources-dir": "_resources",
         "project-files-installed": [
             "app/.htaccess",
