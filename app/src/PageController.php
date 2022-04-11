@@ -29,22 +29,22 @@ namespace {
         {
             parent::init();
 
-            if ($this->curr()->ClassName === 'SilverStripe\ErrorPage\ErrorPage') {
-                // cek apakah ada user dengan nama tersebut
-                $user = User::get()->filter([
-                    'Username' => $this->parseURL()
-                ]);
+            // if ($this->curr()->ClassName === 'SilverStripe\ErrorPage\ErrorPage') {
+            //     // cek apakah ada user dengan nama tersebut
+            //     $user = User::get()->filter([
+            //         'Username' => $this->parseURL()
+            //     ]);
 
-                // jika ada user, tampilkan halaman khusus 
-                if ($user->exists()) {
-                    echo $this->customise([
-                        'active' => 'user',
-                        'Title' => '(' . $user->first()->Username . ') - Rocket',
-                        'User' => $user->first()
-                    ])->renderWith(['User', 'Page']);
-                    exit;
-                }
-            }
+            //     // jika ada user, tampilkan halaman khusus 
+            //     if ($user->exists()) {
+            //         echo $this->customise([
+            //             'active' => 'user',
+            //             'Title' => '(' . $user->first()->Username . ') - Rocket',
+            //             'User' => $user->first()
+            //         ])->renderWith(['User', 'Page']);
+            //         exit;
+            //     }
+            // }
         }
 
         private function parseURL()

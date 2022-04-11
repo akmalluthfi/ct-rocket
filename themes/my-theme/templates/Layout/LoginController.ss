@@ -1,6 +1,6 @@
 <div class="row w-100 justify-content-center">
     <div class="col-6 d-none d-md-block text-center my-auto">
-        <img src="images/login.svg" alt="brand" class="w-75">
+        <img src="themes/my-theme/images/login.svg" alt="brand" class="w-75">
     </div>
     <div class="col col-md-6 px-4" style="max-width:484px">
         <h1 class="text-center color-red">Rocket</h1>
