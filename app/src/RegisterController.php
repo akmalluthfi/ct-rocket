@@ -28,14 +28,20 @@ class RegisterController extends Controller
         // cek apakah request dikirim dari ajax
         if (!$request->isAjax()) return $this->httpError(400);
 
-        $credentials = $request->postVars();
+        $credentials = json_decode($request->getBody(), true);
+
+        var_dump($credentials);
+        $token = base64_encode(random_bytes(64));
+        $token = strtr($token, '+/', '-_');
+        var_dump($token);
+        die();
 
         $user = User::get()->filterAny([
             'Username' => $credentials['username'],
             'Email' => $credentials['email']
         ])->first();
 
-        // cek apakah ada username tersebut
+        // cek apakah ada username /email tersebut
         if (!is_null($user)) {
             $this->getResponse()->setBody(json_encode([
                 'status' => 400,
@@ -45,6 +51,9 @@ class RegisterController extends Controller
             $this->getResponse()->addHeader('content-type', 'application/json');
             return $this->getResponse();
         }
+
+        // insert tabel token 
+        $token = base64_encode(random_bytes(64));
 
         // tambahkan data ke database 
         $newUser = User::create();

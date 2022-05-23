@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "07816c65164a914d18f636ef4089a858",
+    "content-hash": "6233229414458e4dc81439fe724bae6e",
     "packages": [
         {
             "name": "bramus/ansi-php",
@@ -986,16 +986,16 @@
         },
         {
             "name": "league/mime-type-detection",
-            "version": "1.9.0",
+            "version": "1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/mime-type-detection.git",
-                "reference": "aa70e813a6ad3d1558fc927863d47309b4c23e69"
+                "reference": "3e4a35d756eedc67096f30240a68a3149120dae7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/aa70e813a6ad3d1558fc927863d47309b4c23e69",
-                "reference": "aa70e813a6ad3d1558fc927863d47309b4c23e69",
+                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/3e4a35d756eedc67096f30240a68a3149120dae7",
+                "reference": "3e4a35d756eedc67096f30240a68a3149120dae7",
                 "shasum": ""
             },
             "require": {
@@ -1026,7 +1026,7 @@
             "description": "Mime-type detection for Flysystem",
             "support": {
                 "issues": "https://github.com/thephpleague/mime-type-detection/issues",
-                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.9.0"
+                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.10.0"
             },
             "funding": [
                 {
@@ -1038,7 +1038,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-21T11:48:40+00:00"
+            "time": "2022-04-11T12:49:04+00:00"
         },
         {
             "name": "m1/env",
@@ -1709,16 +1709,16 @@
         },
         {
             "name": "silverstripe/admin",
-            "version": "1.10.0",
+            "version": "1.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silverstripe/silverstripe-admin.git",
-                "reference": "d703f15952252073187a0b8b233a39b5cbbb2053"
+                "reference": "22e766519d3a6e92f70f553c4fea505d8950c275"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silverstripe/silverstripe-admin/zipball/d703f15952252073187a0b8b233a39b5cbbb2053",
-                "reference": "d703f15952252073187a0b8b233a39b5cbbb2053",
+                "url": "https://api.github.com/repos/silverstripe/silverstripe-admin/zipball/22e766519d3a6e92f70f553c4fea505d8950c275",
+                "reference": "22e766519d3a6e92f70f553c4fea505d8950c275",
                 "shasum": ""
             },
             "require": {
@@ -1731,6 +1731,7 @@
                 "monolog/monolog": "~1.16",
                 "nikic/php-parser": "^3 || ^4",
                 "phpunit/phpunit": "^9.5",
+                "silverstripe/frameworktest": "^0.4.3",
                 "squizlabs/php_codesniffer": "^3"
             },
             "type": "silverstripe-vendormodule",
@@ -1773,22 +1774,22 @@
             ],
             "support": {
                 "issues": "https://github.com/silverstripe/silverstripe-admin/issues",
-                "source": "https://github.com/silverstripe/silverstripe-admin/tree/1.10.0"
+                "source": "https://github.com/silverstripe/silverstripe-admin/tree/1.10.1"
             },
-            "time": "2021-12-10T03:57:05+00:00"
+            "time": "2022-04-11T01:21:01+00:00"
         },
         {
             "name": "silverstripe/asset-admin",
-            "version": "1.10.1",
+            "version": "1.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silverstripe/silverstripe-asset-admin.git",
-                "reference": "ca23ccd8534c8d8bed56f6f56049a665497b3fe4"
+                "reference": "a9a7a211e0a83b4f3d72d305eebcfe8cf3b8008b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silverstripe/silverstripe-asset-admin/zipball/ca23ccd8534c8d8bed56f6f56049a665497b3fe4",
-                "reference": "ca23ccd8534c8d8bed56f6f56049a665497b3fe4",
+                "url": "https://api.github.com/repos/silverstripe/silverstripe-asset-admin/zipball/a9a7a211e0a83b4f3d72d305eebcfe8cf3b8008b",
+                "reference": "a9a7a211e0a83b4f3d72d305eebcfe8cf3b8008b",
                 "shasum": ""
             },
             "require": {
@@ -1801,6 +1802,7 @@
                 "phpunit/phpunit": "^9.5",
                 "silverstripe/campaign-admin": "^1.5",
                 "silverstripe/cms": "^4.5",
+                "silverstripe/frameworktest": "^0.4.3",
                 "squizlabs/php_codesniffer": "^3"
             },
             "type": "silverstripe-vendormodule",
@@ -1827,9 +1829,9 @@
             "description": "Asset management for the SilverStripe CMS",
             "support": {
                 "issues": "https://github.com/silverstripe/silverstripe-asset-admin/issues",
-                "source": "https://github.com/silverstripe/silverstripe-asset-admin/tree/1.10.1"
+                "source": "https://github.com/silverstripe/silverstripe-asset-admin/tree/1.10.2"
             },
-            "time": "2022-01-26T22:18:37+00:00"
+            "time": "2022-04-11T01:21:06+00:00"
         },
         {
             "name": "silverstripe/assets",
@@ -2879,16 +2881,16 @@
         },
         {
             "name": "silverstripe/versioned-admin",
-            "version": "1.10.0",
+            "version": "1.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silverstripe/silverstripe-versioned-admin.git",
-                "reference": "390a6883571b7b05b46e780f57707439d1b5542d"
+                "reference": "d13bb6517ccd8f567e602dcffff0894b19ee17e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silverstripe/silverstripe-versioned-admin/zipball/390a6883571b7b05b46e780f57707439d1b5542d",
-                "reference": "390a6883571b7b05b46e780f57707439d1b5542d",
+                "url": "https://api.github.com/repos/silverstripe/silverstripe-versioned-admin/zipball/d13bb6517ccd8f567e602dcffff0894b19ee17e4",
+                "reference": "d13bb6517ccd8f567e602dcffff0894b19ee17e4",
                 "shasum": ""
             },
             "require": {
@@ -2939,9 +2941,9 @@
             ],
             "support": {
                 "issues": "https://github.com/silverstripe/silverstripe-versioned-admin/issues",
-                "source": "https://github.com/silverstripe/silverstripe-versioned-admin/tree/1.10.0"
+                "source": "https://github.com/silverstripe/silverstripe-versioned-admin/tree/1.10.1"
             },
-            "time": "2021-11-24T02:41:01+00:00"
+            "time": "2022-04-11T02:17:36+00:00"
         },
         {
             "name": "sminnee/callbacklist",

@@ -17,9 +17,11 @@
             "themes/my-theme/css",
             "themes/my-theme/javascript",
             "themes/my-theme/webfonts",
+            "themes/my-theme/images",
             "themes/react/css",
             "themes/react/javascript",
-            "themes/react/webfonts"
+            "themes/react/webfonts",
+            "themes/react/images"
         ],
         "resources-dir": "_resources",
         "project-files-installed": [

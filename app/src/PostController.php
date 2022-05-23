@@ -15,12 +15,15 @@ class PostController extends Controller
         'delete',
         'getPost',
         'getPosts',
-        'getAllPosts'
+        'getAllPosts',
+        'getPostsByUserId',
+        'getPostsByUserName'
     ];
 
     private static $url_handlers = [
         'GET /' => 'index',
         'POST /' => 'make',
+        'byUsername/$Username' => 'getPostsByUserName'
     ];
 
     public function init()
@@ -33,8 +36,63 @@ class PostController extends Controller
         if ($request->getVar('id')) {
             return $this->getPost($request->getVar('id'));
         } else {
-            return $this->getAllPosts();
+            return $this->getAllPosts($request);
         }
+    }
+
+    public function getAllPosts($request)
+    {
+        if (!$request->isAjax()) return $this->httpError(404);
+
+        $allPosts = [];
+        $images = [];
+        $categories = [];
+
+        // filter ketika user diblock, tidak bisa melihat postingan user tersebut
+        $blockedID = UserBlock::get()->filter([
+            'UserID' => Security::getCurrentUser()->ID
+        ])->column('BlockedID');
+
+        $notFollow = UserFollowed::get()->filter([
+            'UserID' => Security::getCurrentUser()->ID,
+        ])->column('FollowedID');
+
+        $posts = Post::get()->filter([
+            'UserID:not' =>  $blockedID,
+            'UserID' =>  $notFollow
+        ]);
+        // $posts = Post::get();
+
+        foreach ($posts as $key => $post) {
+            foreach ($post->Images() as $image) {
+                $images[] = [
+                    'link' => $image->Fill(614, 614)->Link(),
+                    'caption' => $image->Caption
+                ];
+            }
+
+            foreach ($post->Categories() as $category) {
+                $categories[] = [
+                    'title' => $category->Title,
+                    'link' => $category->Link()
+                ];
+            }
+
+            $allPosts[$key] = [
+                'author' => [
+                    'username' => $post->User()->Username,
+                    'profileLink' => $post->User()->Picture()->Link(),
+                ],
+                'caption' => $post->Caption,
+                'categories' => $categories,
+                'images' => $images
+            ];
+
+            $images = [];
+            $categories = [];
+        }
+
+        return json_encode($allPosts);
     }
 
     public function getPost($id)
@@ -56,7 +114,7 @@ class PostController extends Controller
 
         foreach ($post->Images() as $image) {
             $images[] = [
-                'link' => $image->Link(),
+                'link' => $image->Fill(614, 614)->Link(),
                 'caption' => $image->Caption
             ];
         }
@@ -106,7 +164,7 @@ class PostController extends Controller
             } else {
                 // jika tidak ada, buat category baru dengan category yang dikirimkan 
                 $categoryInstance = Category::create();
-                $categoryInstance->Title = '#' . $category;
+                // $categoryInstance->Title = '#' . $category;
 
                 try {
                     $categoryInstance->write();
@@ -140,7 +198,7 @@ class PostController extends Controller
         // upload semua img 
         foreach ($_FILES as $file) {
             $imageObject = CustomImage::create();
-            $imageObject->Caption = $_POST['description-' . $i];
+            $imageObject->Caption = $_POST['description-' . $i] ?? '';
             $imageObject->PostID = $idPost;
             try {
                 $upload = new Upload();
@@ -167,6 +225,7 @@ class PostController extends Controller
 
     public function getPosts(HTTPRequest $request)
     {
+        // Search Field on Navbar
         if (!$request->isAjax()) return $this->httpError(404);
 
         if (!$request->getVar('term')) return $this->httpError(400);
@@ -181,11 +240,81 @@ class PostController extends Controller
             return json_encode($categoryId->column('Title'));
         }
 
+        // cari id yang memblokir user yang sedang aktif 
+        $blockedID = UserBlock::get()->filter([
+            'UserID' => Security::getCurrentUser()->ID
+        ])->column('BlockedID');
+
+        // filter, saat user A mencari id user B (yang memblokir), 
         $users = User::get()->filter([
-            'Username:PartialMatch' => $request->getVar('term')
+            'Username:PartialMatch' => $request->getVar('term'),
+            'ID:not' => $blockedID
         ]);
 
         return json_encode($users->column('Username'));
+    }
+
+    public function getPostsByUserId(HTTPRequest $request)
+    {
+        if (!$request->isAjax()) return $this->httpError(404);
+        if (!$request->param('ID')) return $this->httpError(404);
+
+        $userPosts = Post::get()->filter('UserID', $request->param('ID'));
+
+        $posts = [];
+
+        foreach ($userPosts as $index => $post) {
+            $posts[$index] = [
+                'Id' => $post->ID,
+                'Caption' => $post->Caption,
+                'Categories' => $post->Categories()->column('Title')
+            ];
+
+            foreach ($post->Images() as $image) {
+                $posts[$index]['Images'][] = [
+                    'Link' => $image->Fill(614, 614)->Link(),
+                    'Caption' => $image->Caption
+                ];
+            }
+        }
+        return json_encode($posts);
+    }
+
+    public function getPostsByUserName(HTTPRequest $request)
+    {
+        if (!$request->isAjax()) return $this->httpError(404);
+        if (!$request->param('Username')) return $this->httpError(404);
+
+        $userPosts = Post::get()->filter('User.Username', $request->param('Username'));
+
+        $user = $userPosts->first()->User();
+        $posts = [
+            'author' => [
+                'id' => $user->ID,
+                'picture' => $user->Picture()->Fill(150, 150)->Link(),
+                'username' => $user->Username,
+                'bio' => $user->Bio,
+                'followers' => $user->getFollowers(),
+                'following' => $user->UserFollowed()->Count(),
+                'hasFollow' => $user->hasFollow(Security::getCurrentUser()->ID)
+            ]
+        ];
+
+        foreach ($userPosts as $index => $post) {
+            $posts['posts'][$index] = [
+                'Id' => $post->ID,
+                'Caption' => $post->Caption,
+                'Categories' => $post->Categories()->column('Title')
+            ];
+
+            foreach ($post->Images() as $image) {
+                $posts['posts'][$index]['Images'][] = [
+                    'Link' => $image->Fill(614, 614)->Link(),
+                    'Caption' => $image->Caption
+                ];
+            }
+        }
+        return json_encode($posts);
     }
 
     public function edit()

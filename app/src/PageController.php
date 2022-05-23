@@ -4,6 +4,7 @@ namespace {
 
     use SilverStripe\Core\ClassInfo;
     use SilverStripe\CMS\Controllers\ContentController;
+    use SilverStripe\ORM\ValidationException;
     use SilverStripe\Security\Security;
 
     class PageController extends ContentController
@@ -29,22 +30,46 @@ namespace {
         {
             parent::init();
 
-            // if ($this->curr()->ClassName === 'SilverStripe\ErrorPage\ErrorPage') {
-            //     // cek apakah ada user dengan nama tersebut
-            //     $user = User::get()->filter([
-            //         'Username' => $this->parseURL()
-            //     ]);
+            if ($this->curr()->ClassName === 'SilverStripe\ErrorPage\ErrorPage') {
+                // cek apakah ada user dengan nama tersebut
+                $user = User::get()->filter([
+                    'Username' => $this->parseURL()
+                ]);
 
-            //     // jika ada user, tampilkan halaman khusus 
-            //     if ($user->exists()) {
-            //         echo $this->customise([
-            //             'active' => 'user',
-            //             'Title' => '(' . $user->first()->Username . ') - Rocket',
-            //             'User' => $user->first()
-            //         ])->renderWith(['User', 'Page']);
-            //         exit;
-            //     }
-            // }
+                // jika ada user, tampilkan halaman khusus 
+                if ($user->exists()) {
+                    // cek apakah user sedang aktif 
+                    if (Security::getCurrentUser()->Username === $user->first()->Username) {
+                        // user sudah login, 
+                        // user active 
+
+
+                        echo $this->customise([
+                            'active' => 'user',
+                            'Title' => '(' . $user->first()->Username . ') - Rocket',
+                            'User' => $user->first(),
+                            'Followers' => $user->first()->getFollowers(),
+                            'Following' => $user->first()->UserFollowed()->Count(),
+                            'hasFollow' => Security::getCurrentUser()->hasFollow($user->first()->ID) ? 'true' : 'false'
+                        ])->renderWith(['User', 'Page']);
+
+                        exit;
+                    } else {
+                        // user kemungkinan belum login
+                        // user nonactive
+                        echo $this->customise([
+                            'active' => 'user',
+                            'Title' => '(' . $user->first()->Username . ') - Rocket',
+                            'User' => $user->first(),
+                            'Followers' => $user->first()->getFollowers(),
+                            'Following' => $user->first()->UserFollowed()->Count(),
+                            'hasFollow' => Security::getCurrentUser()->hasFollow($user->first()->ID) ? 'true' : 'false',
+                            'isBlocked' => ($user->first()->isBlocked(Security::getCurrentUser()->ID)) ? 'true' : 'false',
+                        ])->renderWith(['User', 'Page']);
+                        exit;
+                    }
+                }
+            }
         }
 
         private function parseURL()

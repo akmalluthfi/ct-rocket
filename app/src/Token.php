@@ -2,11 +2,10 @@
 
 use SilverStripe\ORM\DataObject;
 
-class UserFollowed extends DataObject
+class Token extends DataObject
 {
     private static $db = [
-        'UserID' => 'Int', // user
-        'FollowedID' => 'Int' // id user yang diikuti
+        'Token' => 'Varchar',
     ];
 
     private static $has_one = [

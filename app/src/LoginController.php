@@ -23,6 +23,7 @@ class LoginController extends Controller
     {
         parent::init();
         if (Security::getCurrentUser()) return $this->redirectBack();
+        // if (\SilverStripe\Security\Security::getCurrentUser()) return $this->redirectBack();
     }
 
     public function authenticate(HTTPRequest $request)
@@ -30,7 +31,8 @@ class LoginController extends Controller
         // cek apakah request dikirim dari ajax
         if (!$request->isAjax()) return $this->httpError(400);
 
-        $credentials = $request->postVars();
+        $credentials = json_decode($request->getBody(), true);
+        // $credentials = $request->postVars();
 
         // cek apakah field username/email ada yang sama
         $user = User::get()->filterAny([
@@ -53,8 +55,15 @@ class LoginController extends Controller
 
         // cek apakah username dan password sama 
         if ($result->isValid()) {
+            // generate token 
+            $token = Token::create();
+            $token->Token = strtr(base64_encode(random_bytes(64)), '+/', '-_');
+            $token->UserID = $user->ID;
+            $token->write();
+
             $identityStore = Injector::inst()->get(IdentityStore::class);
             $identityStore->logIn($user);
+
             $this->getResponse()->setBody(json_encode([
                 'status' => 200,
                 'message' => 'Login Success'

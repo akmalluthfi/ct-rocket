@@ -1,1 +1,3 @@
-<h1>Halaman Home</h1>
+<div id="root"></div>
+
+<% require themedJavascript('Home', 'text/babel') %>

@@ -15,11 +15,13 @@ class User extends Member
 
     private static $has_many = [
         'Posts' => Post::class,
-        'UserFollowed' => UserFollowed::class
+        'UserFollowed' => UserFollowed::class,
+        'UserBlock' => UserBlock::class
     ];
 
     private static $has_one = [
-        'Picture' => Image::class
+        'Picture' => Image::class,
+        'Token' => Token::class
     ];
 
     private static $owns = [
@@ -43,5 +45,14 @@ class User extends Member
             'FollowedID' => $this->ID
         ]);
         return count($followers);
+    }
+
+    public function isBlocked($userId)
+    {
+        // cek apakah user ini diblock oleh $userId
+        foreach ($this->UserBlock() as $blocked) {
+            if ($blocked->BlockedID === $userId) return true;
+        }
+        return false;
     }
 }

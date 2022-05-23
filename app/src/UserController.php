@@ -2,12 +2,13 @@
 
 use SilverStripe\Security\Security;
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\ValidationException;
 
 class UserController extends Controller
 {
     private static $allowed_actions = [
-        'follow', 'unfollow'
+        'follow', 'unfollow', 'block', 'unblock'
     ];
 
     private static $url_handlers = [
@@ -82,6 +83,81 @@ class UserController extends Controller
             'followers' => User::get_by_id($_POST['followedID'])->getFollowers(),
             'userID' => $_POST['userID'],
             'followedID' => $_POST['followedID']
+        ]));
+    }
+
+    public function block()
+    {
+        if (!$this->getRequest()->isAjax()) return $this->httpError(404);
+        $this->getResponse()->addHeader('content-type', 'application/json');
+
+        $data = $_POST;
+
+        // cek apakah user difollow atau belum 
+        // apakah user id yang mau diblock(blocked id) followed(mengikuti/difollow) user yang mau memblokir (userID) 
+        $hasfollow = UserFollowed::get()->filter([
+            'UserID' => $data['blockedID'],
+            'FollowedID' => $data['userID']
+        ])->first();
+
+        // jika sudah follow, hapus
+        if ($hasfollow) $hasfollow->delete();
+
+        // cek apakah user sudah diblock atau belum 
+        $blocked = UserBlock::get()->filter([
+            'UserID' => $data['blockedID'],
+            'BlockedID' => $data['userID']
+        ])->first();
+
+        // jika sudah diblock, hapus
+        if ($blocked) $blocked->delete();
+
+        $block = UserBlock::create();
+        $block->UserID = $data['userID']; // id yang diblock
+        $block->BlockedID = $data['blockedID']; // id yang memblokir
+
+        try {
+            $block->write();
+        } catch (ValidationException $e) {
+            return $this->getResponse()->setBody(json_encode([
+                'status' => 500,
+                'message' => $e->getMessage()
+            ]));
+        }
+
+        return $this->getResponse()->setBody(json_encode([
+            'status' => 200,
+            'message' => 'Success',
+        ]));
+    }
+
+    public function unblock()
+    {
+        if (!$this->getRequest()->isAjax()) return $this->httpError(404);
+        $this->getResponse()->addHeader('content-type', 'application/json');
+
+        $data = $_POST;
+
+        // cek apakah ada didatabase 
+        $exists = UserBlock::get()->filter([
+            'UserID' => $data['userID'],
+            'BlockedID' => $data['blockedID']
+        ])->first();
+
+        $this->getResponse()->addHeader('content-type', 'application/json');
+
+        // jika tidak ada return pesan error
+        if (is_null($exists)) return $this->getResponse()->setBody(json_encode([
+            'status' => 400,
+            'message' => 'you not follow this account'
+        ]));
+
+        // jika ada 
+        if ($exists) $exists->delete();
+
+        return $this->getResponse()->setBody(json_encode([
+            'status' => 200,
+            'message' => 'success unblock',
         ]));
     }
 }

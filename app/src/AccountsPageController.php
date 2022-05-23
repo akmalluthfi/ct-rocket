@@ -7,6 +7,7 @@ use SilverStripe\Security\Security;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
+use SilverStripe\View\ArrayData;
 
 class AccountsPageController extends PageController
 {
@@ -43,18 +44,24 @@ class AccountsPageController extends PageController
 
     public function edit()
     {
-        return $this->render([
-            'ContentAccount' => $this->renderWith('Layout/Accounts/edit'),
+        // return $this->render([
+        //     'ContentAccount' => $this->renderWith('Layout/Accounts/edit'),
+        //     'active' => 'edit'
+        // ]);
+        return $this->customise(new ArrayData([
             'active' => 'edit'
-        ]);
+        ]))->renderWith(['AccountsPage', 'Page']);
     }
 
     public function passwordchange()
     {
-        return $this->render([
-            'ContentAccount' => $this->renderWith('Layout/Accounts/passwordchange'),
-            'active' => 'passwordchange'
-        ]);
+        // return $this->render([
+        //     'ContentAccount' => $this->renderWith('Layout/Accounts/passwordchange'),
+        //     'active' => 'passwordchange'
+        // ]);
+        return $this->customise(new ArrayData([
+            'active' => 'password/change'
+        ]))->renderWith(['AccountsPage', 'Page']);
     }
 
     public function logout()
@@ -138,22 +145,24 @@ class AccountsPageController extends PageController
         if (!$this->getRequest()->isAjax()) return $this->httpError(404);
         // $this->getResponse()->addHeader('content-type', 'application/json');
 
+        $profile = json_decode($this->getRequest()->getBody(), true);
+        // $profile = $_POST;
+
         // cek apakah ada input yang kosong 
-        if (!isset($_POST['username'])) return $this->getResponse()->setBody(json_encode([
+        if (!isset($profile['username'])) return $this->getResponse()->setBody(json_encode([
             'status' => 400,
             'message' => 'username cannot be empty!'
         ]));
 
-        if (!isset($_POST['email'])) return $this->getResponse()->setBody(json_encode([
+        if (!isset($profile['email'])) return $this->getResponse()->setBody(json_encode([
             'status' => 400,
             'message' => 'email cannot be empty!'
         ]));
 
         $user = Security::getCurrentUser();
-
         // cek username
         $usernameExists = User::get()->filter([
-            'Username' => $_POST['username']
+            'Username' => $profile['username']
         ])->first();
 
         if (!is_null($usernameExists)) {
@@ -165,20 +174,20 @@ class AccountsPageController extends PageController
 
         // cek email
         $emailExists = User::get()->filter([
-            'Email' => $_POST['email']
+            'Email' => $profile['email']
         ])->first();
 
         if (!is_null($emailExists)) {
-            if ($user->Email !== $usernameExists->Email) return $this->getResponse()->setBody(json_encode([
+            if ($user->Email !== $emailExists->Email) return $this->getResponse()->setBody(json_encode([
                 'status' => 400,
-                'message' => "Another account is using " . $_POST['email'] . "."
+                'message' => "Another account is using " . $profile['email'] . "."
             ]));
         }
 
         // jika tidak ada username yang sama 
-        $user->Username = $_POST['username'];
-        $user->Email = $_POST['email'];
-        $user->Bio = $_POST['bio'];
+        $user->Username = $profile['username'];
+        $user->Email = $profile['email'];
+        $user->Bio = $profile['bio'];
 
         try {
             $user->write();
@@ -198,12 +207,19 @@ class AccountsPageController extends PageController
 
     public function changepassword()
     {
+        if (!$this->getRequest()->isAjax()) return $this->httpError(404);
+
+        $userInput = json_decode($this->getRequest()->getBody(), true);
+        // $userInput = $_POST;
+
+        // * ===============================
+
         // ambil semua input
         // cek apakah old password sama dengan password user yang active
         $auth = new MemberAuthenticator;
         $userActive = Security::getCurrentUser();
 
-        $result = $auth->checkPassword($userActive, $_POST['oldPassword']);
+        $result = $auth->checkPassword($userActive, $userInput['oldPassword']);
 
         $this->getResponse()->addHeader('content-type', 'application/json');
 
@@ -214,13 +230,13 @@ class AccountsPageController extends PageController
         ]));
 
         // jika password valid, cek apakah new password conf password sama  
-        if ($_POST['newPassword'] !== $_POST['confPassword']) return $this->getResponse()->setBody(json_encode([
+        if ($userInput['newPassword'] !== $userInput['confPassword']) return $this->getResponse()->setBody(json_encode([
             'status' => 400,
             'message' => "Please make sure that both passwords match."
         ]));
 
         // jika sama, masukkan password baru untuk user 
-        $userActive->Password = $_POST['newPassword'];
+        $userActive->Password = $userInput['newPassword'];
         try {
             $userActive->write();
         } catch (ValidationException $e) {

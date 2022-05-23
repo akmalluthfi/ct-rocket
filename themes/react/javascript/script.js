@@ -57,7 +57,7 @@ $(document).ready(function () {
             $.each(allPath, function (i, val) {
                 if (i === 0) {
                     carouselbutton = `
-                        <button type="button" data-bs-target="#carouselAddPost" data-bs-slide-to="${i}" class="active" aria-current="true" aria-label="Slide ${i+1}"></button>
+                        <button type="button" data-bs-target="#carouselAddPost" data-bs-slide-to="${i}" class="active" aria-current="true" aria-label="Slide ${i + 1}"></button>
                     `;
 
                     carouselImage = `
@@ -69,7 +69,7 @@ $(document).ready(function () {
                     `;
                 } else {
                     carouselbutton += `
-                        <button type="button" data-bs-target="#carouselAddPost" data-bs-slide-to="${i}" aria-label="Slide ${i+1}"></button>
+                        <button type="button" data-bs-target="#carouselAddPost" data-bs-slide-to="${i}" aria-label="Slide ${i + 1}"></button>
                     `;
 
                     carouselImage += `

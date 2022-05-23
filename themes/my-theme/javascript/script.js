@@ -57,7 +57,7 @@ $(document).ready(function () {
             $.each(allPath, function (i, val) {
                 if (i === 0) {
                     carouselbutton = `
-                        <button type="button" data-bs-target="#carouselAddPost" data-bs-slide-to="${i}" class="active" aria-current="true" aria-label="Slide ${i+1}"></button>
+                        <button type="button" data-bs-target="#carouselAddPost" data-bs-slide-to="${i}" class="active" aria-current="true" aria-label="Slide ${i + 1}"></button>
                     `;
 
                     carouselImage = `
@@ -69,7 +69,7 @@ $(document).ready(function () {
                     `;
                 } else {
                     carouselbutton += `
-                        <button type="button" data-bs-target="#carouselAddPost" data-bs-slide-to="${i}" aria-label="Slide ${i+1}"></button>
+                        <button type="button" data-bs-target="#carouselAddPost" data-bs-slide-to="${i}" aria-label="Slide ${i + 1}"></button>
                     `;
 
                     carouselImage += `
@@ -308,7 +308,7 @@ $(document).ready(function () {
     }
 
     function create() {
-        let fd = new FormData(); // untuk menyimpan input user yang akan dikirim ke controller 
+        let fd = new FormData(); // untuk menyimpan input user yang akan dikirim ke controller
 
         // tambahkan image ke form data 
         $.each(fields.images, function (index, val) {
@@ -324,7 +324,7 @@ $(document).ready(function () {
         // tambahkan caption post
         fd.append('caption', $('textarea#caption', form).val());
 
-        // tambahkan input untuk gambar 
+        // tambahkan input caption untuk gambar 
         $('div#miniImg input', form).each(function (index, element) {
             fd.append($(this).attr('name'), $(this).val());
         })

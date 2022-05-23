@@ -22,6 +22,7 @@
     <% require themedJavascript('jquery/jquery') %>
     <% require themedJavascript('bootstrap/bootstrap.min') %>
     <% require themedJavascript('sweetalert2.all.min') %>
+
 </head>
 
 <body>
