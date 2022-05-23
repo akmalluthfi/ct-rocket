@@ -2,9 +2,7 @@
 
 namespace {
 
-    use SilverStripe\Core\ClassInfo;
     use SilverStripe\CMS\Controllers\ContentController;
-    use SilverStripe\ORM\ValidationException;
     use SilverStripe\Security\Security;
 
     class PageController extends ContentController

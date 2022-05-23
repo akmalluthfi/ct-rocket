@@ -33,7 +33,7 @@ class PostController extends Controller
 
     public function index(HTTPRequest $request)
     {
-        if ($request->getVar('id')) {
+        if (!is_null($request->getVar('id'))) {
             return $this->getPost($request->getVar('id'));
         } else {
             return $this->getAllPosts($request);
@@ -49,19 +49,27 @@ class PostController extends Controller
         $categories = [];
 
         // filter ketika user diblock, tidak bisa melihat postingan user tersebut
+        // cari apakah user ini sedang diblock oleh blocked_id
         $blockedID = UserBlock::get()->filter([
             'UserID' => Security::getCurrentUser()->ID
         ])->column('BlockedID');
 
+        // cari id user yang difollow oleh user ini
         $notFollow = UserFollowed::get()->filter([
             'UserID' => Security::getCurrentUser()->ID,
         ])->column('FollowedID');
 
-        $posts = Post::get()->filter([
-            'UserID:not' =>  $blockedID,
+        // kumpulkan filter
+        $postFilter = [
             'UserID' =>  $notFollow
-        ]);
-        // $posts = Post::get();
+        ];
+
+        // cek, jika empty akan error
+        if (!empty($blockedID)) {
+            $postFilter['UserID:not'] = $blockedID;
+        }
+
+        $posts = Post::get()->filter($postFilter);
 
         foreach ($posts as $key => $post) {
             foreach ($post->Images() as $image) {
@@ -122,7 +130,7 @@ class PostController extends Controller
         $this->getResponse()->addHeader('content-type', 'application/json');
         $this->getResponse()->setBody(json_encode([
             'status' => 200,
-            'message' => 'Success get post with id : ' . $post->ID,
+            // 'message' => 'Success get post with id : ' . $post->ID,
             'post' => [
                 'username' => $post->User()->Username,
                 'profilePicture' => $post->User()->Picture()->Link(),
@@ -225,6 +233,9 @@ class PostController extends Controller
 
     public function getPosts(HTTPRequest $request)
     {
+        var_dump($request);
+        die();
+
         // Search Field on Navbar
         if (!$request->isAjax()) return $this->httpError(404);
 
