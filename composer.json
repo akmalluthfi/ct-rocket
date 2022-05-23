@@ -21,7 +21,19 @@
             "themes/react/css",
             "themes/react/javascript",
             "themes/react/webfonts",
-            "themes/react/images"
+            "themes/react/images",
+            "vendor/silverstripe/admin/client/dist",
+            "vendor/silverstripe/admin/client/lang",
+            "vendor/silverstripe/cms/client/dist",
+            "vendor/silverstripe/cms/client/lang",
+            "vendor/silverstripe/session-manager/client/dist",
+            "vendor/silverstripe/versioned-admin/client/dist",
+            "vendor/silverstripe/asset-admin/client/dist",
+            "vendor/silverstripe/asset-admin/client/lang",
+            "vendor/silverstripe/campaign-admin/client/dist",
+            "vendor/silverstripe/campaign-admin/client/lang",
+            "vendor/silverstripe/admin/thirdparty",
+            "vendor/silverstripe/login-forms/client/dist"
         ],
         "resources-dir": "_resources",
         "project-files-installed": [

@@ -1,16 +1,30 @@
 <?php
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Assets\Image;
+use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\Security;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TabSet;
 
 class User extends Member
 {
     private static $db = [
         'Username' => 'Varchar',
         'Email' => 'Varchar',
+        'isBusinessAccount' => 'Boolean',
         'Password' => 'Varchar',
         'Bio' => 'Varchar',
+    ];
+
+    private static $summary_fields = [
+        'Username',
+        'Email',
+    ];
+
+    private static $searchable_fields = [
+        'Username', 'Email'
     ];
 
     private static $has_many = [
@@ -27,6 +41,19 @@ class User extends Member
     private static $owns = [
         'Picture'
     ];
+
+    public function getCMSFields()
+    {
+        $fields = FieldList::create(TabSet::create('Root'));
+
+        $fields->addFieldsToTab('Root.Main', [
+            TextField::create('Username'),
+            TextField::create('Email'),
+            CheckboxField::create('isBusinessAccount', 'Business Account'),
+        ]);
+
+        return $fields;
+    }
 
     public function hasFollow($userID)
     {
