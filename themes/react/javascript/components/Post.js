@@ -12,7 +12,7 @@ class Post extends React.Component {
 
   handleClick(event) {
     // ambil id, lalu buat single post dengan id tersebut
-    const id = $(event.target).parents("div.btn-detailsModal").data("id");
+    const id = $(event.target).parents('div.btn-detailsModal').data('id');
     const post = this.state.posts.filter((val, i) => {
       return val.Id === id;
     });
@@ -68,7 +68,7 @@ class Post extends React.Component {
       </div>
     );
     return (
-      <div className="row" style={{ width: 100 + "%" }}>
+      <div className="row mt-2" style={{ width: 100 + '%' }}>
         {post.length === 0 ? noPost : post}
         {/* <ModalDetail post={this.state.singlePost} user={this.props.user} /> */}
       </div>

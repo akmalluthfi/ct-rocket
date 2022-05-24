@@ -15,7 +15,7 @@
         <% require themedCSS('font') %>
         <% require themedCSS('utilities') %>
         <% require themedCSS('jquery/jquery-ui.min') %>
-        <% require themedCSS('style') %>
+        <% require themedCSS('navbar') %>
         <% require themedCSS('minimal') %>
     
         <%-- Include Script --%>

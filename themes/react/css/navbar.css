@@ -1,0 +1,44 @@
+.nav-link {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.nav-link:focus {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.active.nav-link {
+  color: #ee5253;
+}
+
+.nav-profile-user {
+  margin-top: -4px;
+}
+
+.nav-profile-user.active {
+  width: 26px;
+  border: 1px solid black;
+  padding: 1px;
+}
+
+.nav-link:hover {
+  color: #ee5253;
+}
+
+.dropdown-toggle::after {
+  content: none;
+}
+
+.nav-dropdown {
+  margin-top: 0.6rem !important;
+  margin-left: -7rem !important;
+}
+
+.user-profile {
+  width: 77px;
+}
+
+@media (max-width: 480px) {
+  nav input[type='search'] {
+    display: none;
+  }
+}

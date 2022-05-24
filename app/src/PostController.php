@@ -294,11 +294,14 @@ class PostController extends Controller
     public function getPostsByUserName(HTTPRequest $request)
     {
         if (!$request->isAjax()) return $this->httpError(404);
-        if (!$request->param('Username')) return $this->httpError(404);
+        if (!$request->param('Username')) return $this->httpError(400, 'Include param username');
 
         $userPosts = Post::get()->filter('User.Username', $request->param('Username'));
 
+        if (!$userPosts->exists()) return $this->httpError(404, 'User Not Found');
+
         $user = $userPosts->first()->User();
+
         $posts = [
             'author' => [
                 'id' => $user->ID,

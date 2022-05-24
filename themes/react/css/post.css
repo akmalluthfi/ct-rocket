@@ -1,0 +1,29 @@
+.container {
+  max-width: 992px;
+}
+
+.bg-post:hover {
+  transform: scale(1.2);
+}
+
+.bg-post:hover .btn-outline-grey {
+  visibility: visible;
+}
+
+.bg-post {
+  background-size: cover;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 500ms;
+}
+
+#tab-list .active {
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-black-rgb), var(--bs-text-opacity)) !important;
+  border-top: 1px solid #212529;
+}
+
+#tab-list {
+  --bs-text-opacity: 1;
+  color: rgba(0, 0, 0, 0.5) !important;
+}

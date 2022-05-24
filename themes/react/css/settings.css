@@ -1,0 +1,39 @@
+.modal-uploadImage {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.settings-content {
+  width: 100%;
+}
+.list-group-item {
+  border-width: 0 0 0 3px;
+  border-color: transparent;
+}
+
+.list-active {
+  border-left-color: #ee5253 !important;
+  font-weight: 700;
+}
+
+.list-group-item:hover {
+  border-color: rgba(0, 0, 0, 0.125);
+  color: #ee5253;
+}
+
+@media (max-width: 576px) {
+  .settings-menu {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 768px) {
+  .user-profile {
+    width: 150px;
+  }
+
+  .settings-content {
+    width: 75%;
+  }
+}

@@ -2,7 +2,6 @@
 
 use SilverStripe\Security\Security;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\ValidationException;
 
 class UserController extends Controller

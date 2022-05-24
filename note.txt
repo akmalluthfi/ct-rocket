@@ -15,5 +15,5 @@ Step
 5. didalam tab ads tampilkan list post berserta tombol yang ketika ditekan akan menjadikan post tersebut sebagai ads 
 
 6. tab insight (untuk melihat informasi account)
-7. didalam tab insight tampilkan berapa jumlah orang yang mengunjungi account pada hari ini / minggu ini 
-8. dan juga tampilkan berapa jumlah kenaikan followers yang bertambah pada hari ini / minggu ini 
+7. didalam tab insight tampilkan berapa jumlah orang yang mengunjungi account pada hari ini / minggu ini (Profile Visit)
+8. dan juga tampilkan berapa jumlah kenaikan followers yang bertambah pada hari ini / minggu ini (Followers)
