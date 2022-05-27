@@ -16,6 +16,7 @@ function Loader() {
 }
 
 function PostItem(props) {
+  // handle input checkbox
   return (
     <div className="col">
       <div className="card mb-3 rounded-3 shadow">
@@ -34,16 +35,20 @@ function PostItem(props) {
               <p className="card-text">
                 <small className="text-muted">Last updated 3 mins ago</small>
               </p>
-              <div className="form-check">
+              <div className="form-check form-switch">
                 <input
                   className="form-check-input"
                   type="checkbox"
-                  value="isAds"
-                  id="isAds"
+                  role="switch"
+                  onChange={(e) =>
+                    props.handleCheck({
+                      id: props.id,
+                      value: e.target.checked,
+                    })
+                  }
+                  defaultChecked={props.isAds}
                 />
-                <label className="form-check-label" htmlFor="flexCheckDefault">
-                  check to be ads
-                </label>
+                <label className="form-check-label">add to ads</label>
               </div>
             </div>
           </div>
@@ -54,8 +59,15 @@ function PostItem(props) {
 }
 
 function Ads() {
+  // untuk menyimpan posts
   const [posts, setPosts] = React.useState([]);
   let author = {};
+
+  // untuk menyimpan event click
+  const [check, checked] = React.useState({
+    id: 0,
+    value: false,
+  });
 
   React.useEffect(() => {
     fetch(document.baseURI + 'post/byUsername/' + window.UserController.Name, {
@@ -78,22 +90,48 @@ function Ads() {
         author = data.author;
         setPosts(data.posts);
       });
+    console.log('fetch');
   }, []);
+
+  React.useEffect(() => {
+    const changeToAds = async () => {
+      const options = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ value: check.value }),
+      };
+
+      const response = await fetch(
+        `http://localhost:8080/MagangCrosstechno/rocket/post/${check.id}/ads`,
+        options
+      );
+
+      const data = await response.json();
+    };
+
+    if (check.id === 0) {
+      return;
+    } else {
+      changeToAds();
+    }
+  }, [check]);
 
   let postList;
 
   if (posts.length > 0) {
     postList = posts.map((post) => {
-      // console.log(post.Id);
       // console.log(post.Caption); // can be null
       const { Link, Caption } = post.Images[0]; // caption can be null
 
       return (
         <PostItem
+          id={post.Id}
           key={post.Id}
           categories={post.Categories}
           caption={post.Caption === null ? Caption : post.Caption}
           image={Link}
+          isAds={post.isAds}
+          handleCheck={checked}
         ></PostItem>
       );
     });

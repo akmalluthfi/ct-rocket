@@ -17,13 +17,15 @@ class PostController extends Controller
         'getPosts',
         'getAllPosts',
         'getPostsByUserId',
-        'getPostsByUserName'
+        'getPostsByUserName',
+        'updatePostAds'
     ];
 
     private static $url_handlers = [
         'GET /' => 'index',
         'POST /' => 'make',
-        'byUsername/$Username' => 'getPostsByUserName'
+        'byUsername/$Username' => 'getPostsByUserName',
+        'PUT $id!/ads' => 'updatePostAds'
     ];
 
     public function init()
@@ -37,6 +39,40 @@ class PostController extends Controller
             return $this->getPost($request->getVar('id'));
         } else {
             return $this->getAllPosts($request);
+        }
+    }
+
+    public function updatePostAds(HTTPRequest $request)
+    {
+        // cek apakah method nya put 
+        if (!$request->isPUT()) return $this->httpError(404);
+
+        // cek apakah ajax
+        // if (!$request->isAjax()) return $this->httpError(404);
+
+        // set response header
+        $this->getResponse()->addHeader("Content-type", "application/json");
+
+        // ambil parameter id dan body 
+        $body = json_decode($request->getBody());
+        $id = $request->param('id');
+        // ambil post berdasarkan id
+        $post = Post::get_by_id($id);
+        // lalu ubah column isAds menjadi apa yang dikirim oleh user
+        $post->isAds = $body->value;
+
+        try {
+            $post->write();
+            return $this->getResponse()->setBody(json_encode([
+                'status' => 200,
+                'message' => 'success update post with id ' . $post->ID,
+                'post' => $post->toMap(),
+            ]));
+        } catch (ValidationException $e) {
+            return $this->getResponse()->setBody(json_encode([
+                'status' => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]));
         }
     }
 
@@ -233,9 +269,6 @@ class PostController extends Controller
 
     public function getPosts(HTTPRequest $request)
     {
-        var_dump($request);
-        die();
-
         // Search Field on Navbar
         if (!$request->isAjax()) return $this->httpError(404);
 
@@ -317,6 +350,7 @@ class PostController extends Controller
         foreach ($userPosts as $index => $post) {
             $posts['posts'][$index] = [
                 'Id' => $post->ID,
+                'isAds' => $post->isAds,
                 'Caption' => $post->Caption,
                 'Categories' => $post->Categories()->column('Title')
             ];

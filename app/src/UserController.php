@@ -2,17 +2,25 @@
 
 use SilverStripe\Security\Security;
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\ValidationException;
 
 class UserController extends Controller
 {
     private static $allowed_actions = [
-        'follow', 'unfollow', 'block', 'unblock'
+        'follow',
+        'unfollow',
+        'block',
+        'unblock',
+        'getVisitors',
+        'getFollowers'
     ];
 
     private static $url_handlers = [
         'GET /' => 'index',
         'POST /' => 'make',
+        'GET visitors/$UserID' => 'getVisitors',
+        'GET followers/$UserID' => 'getFollowers'
     ];
 
     public function init()
@@ -157,6 +165,108 @@ class UserController extends Controller
         return $this->getResponse()->setBody(json_encode([
             'status' => 200,
             'message' => 'success unblock',
+        ]));
+    }
+
+    public function getVisitors(HTTPRequest $request)
+    {
+        // cek apakah request dari ajax 
+        if (!$request->isAjax()) return $this->httpError(404);
+
+        // set response 
+        $this->getResponse()->addHeader("Content-type", "application/json");
+
+        // cek apakah ada param 
+        $userID = $request->param('UserID');
+        if (is_null($userID)) return $this->getResponse()->setBody(json_encode([
+            'status' => 400,
+            'message' => 'no parameters passed',
+        ]));
+
+        // cek apakah ada queryparam
+        $filterByDay = $request->getVar('filter') ?? 'today';
+
+        if ($filterByDay === 'today') {
+            $filter = [
+                'VisitedAt:PartialMatch' => date('Y-m-d')
+            ];
+        } else if ($filterByDay === 'last7days') {
+            $filter = [
+                'VisitedAt:GreaterThanOrEqual' => date('Y-m-d', strtotime('-7 days')),
+                'VisitedAt:LessThanOrEqual' => date('Y-m-d'),
+            ];
+        }
+
+        // get user berdasarkan id 
+        $user = User::get_by_id($userID);
+
+        // cek apakah user ada 
+        if (is_null($user)) return $this->getResponse()->setBody(json_encode([
+            'status' => 404,
+            'message' => 'User not found',
+        ]));
+
+        // jika ada, 
+        // ambil jumlah visitor
+        $filteredVisitors = $user->Visitors()->filter($filter);
+
+        return $this->getResponse()->setBody(json_encode([
+            'status' => 200,
+            'message' => 'Success',
+            'totalResults' => $filteredVisitors->Count(),
+        ]));
+    }
+
+    public function getFollowers(HTTPRequest $request)
+    {
+        if (!$request->isAjax()) return $this->httpError(404);
+
+        // set response 
+        $this->getResponse()->addHeader("Content-type", "application/json");
+
+        // cek apakah ada param 
+        $userID = $request->param('UserID');
+        if (is_null($userID)) return $this->getResponse()->setBody(json_encode([
+            'status' => 400,
+            'message' => 'no parameters passed',
+        ]));
+
+        // get user berdasarkan id 
+        $user = User::get_by_id($userID);
+
+        // cek apakah user ada 
+        if (is_null($user)) return $this->getResponse()->setBody(json_encode([
+            'status' => 404,
+            'message' => 'User not found',
+        ]));
+
+        // cek apakah ada queryparam
+        $filterByDay = $request->getVar('filter') ?? 'today';
+
+        if ($filterByDay === 'today') {
+            $filter = [
+                'FollowedAt:PartialMatch' => date('Y-m-d')
+            ];
+        } else if ($filterByDay === 'last7days') {
+            $filter = [
+                'FollowedAt:GreaterThanOrEqual' => date('Y-m-d', strtotime('-7 days')),
+                'FollowedAt:LessThanOrEqual' => date('Y-m-d'),
+            ];
+        }
+
+        // cari semua id followers akun ini, lalu filter
+        $followers = $user->UserFollowed();
+        $filteredFollowers = $followers->filter($filter);
+
+        // jika ada hitung jumlah followers 
+        // followers didapatkan dari menghitung jumlah userId pada tabel UserFollowed
+        // user_id diikuti oleh followedID 
+        return $this->getResponse()->setBody(json_encode([
+            'status' => 200,
+            'message' => 'Success',
+            'totalFollowers' => $followers->Count(),
+            'filteredFollowers' => $filteredFollowers->Count(),
+            'filterBy' => $filterByDay
         ]));
     }
 }

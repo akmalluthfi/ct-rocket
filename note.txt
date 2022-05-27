@@ -17,3 +17,67 @@ Step
 6. tab insight (untuk melihat informasi account)
 7. didalam tab insight tampilkan berapa jumlah orang yang mengunjungi account pada hari ini / minggu ini (Profile Visit)
 8. dan juga tampilkan berapa jumlah kenaikan followers yang bertambah pada hari ini / minggu ini (Followers)
+
+==========================================================
+Profile Visit
+class Visitor extends DataObject {
+  private static $has_one = [
+    'User' => User::class,
+    'Visitor' => User::class
+  ];
+  private static $db = [
+    VisitorID => Int (Id user yang melihat akun ini dapatkan dari Security::getCurrentUser()->ID, pada saat di page Controller); 
+  ]
+}
+class User extends Member {
+  private static $has_many = [
+    Visitors = Visitor::class
+  ]
+}
+
+buat relasi one to many, dimana 1 user bisa mempunyai banyak Visitor.
+
+pada saat mau mengakses user, cek apakah user tersebut user yang aktif, jika iya, lupakan 
+
+jika tidak ambil id user dan current id, lalu tambahkan ke database 
+
+lalu buat function untuk mengambil jumlah user yang visit akun ini 
+
+==============================================================
+
+userFollowed (already have class)
+cari total followers user 
+lalu buat function untuk menghitung jumlah followers yang dibuat pada hari ini 
+
+lalu buat function untuk menghitung jumlah followers yang dibuat pada satu minggu terakhir
+
+==================================================================
+Ads 
+Tambahkan Field baru pada Model Post 
+
+class Post extends DataObject {
+  private static $db = [
+    isAds = 'Boolean'
+  ];
+}
+
+lalu buat function untuk mengubah Ads berdasarkan post id 
+
+lalu pada tabs ads, tampilkan semua post, jika ads true maka centang 
+
+----------------------------------------------------------
+Refactor Modal User 
+
+Followed
+
+userID diikuti oleh 
+db = [
+  UserID : hasil relasi 
+  FollowedID => int
+]
+
+get user followers 
+$user->Followed()->Count()
+
+get user following 
+Followed::get()->filter('FollowedID', $user->ID)->Count()

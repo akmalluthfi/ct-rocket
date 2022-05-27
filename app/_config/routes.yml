@@ -10,4 +10,6 @@ SilverStripe\Control\Director:
     'user': 'UserController'
     'login//$Action/$ID/$Name': 'LoginController'
     'register//$Action/$ID/$Name': 'RegisterController'
-    'explore' : 'ExploreController'
+    'explore': 'ExploreController'
+    'test': 'TestController'
+    'test/$id/coba': 'TestController'

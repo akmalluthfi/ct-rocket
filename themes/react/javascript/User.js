@@ -222,10 +222,16 @@ function TabList(props) {
     </div>
   );
 
-  const isBusinessAccount =
-    window.UserController.isBusinessAccount === '1' ? true : false;
+  // cek apakah user ini user yang sedang aktif
 
-  return isBusinessAccount ? item : postOnly;
+  if (window.User.Name === window.UserController.Name) {
+    const isBusinessAccount =
+      window.UserController.isBusinessAccount === '1' ? true : false;
+
+    return isBusinessAccount ? item : postOnly;
+  } else {
+    return postOnly;
+  }
 }
 
 class UserPage extends React.Component {
@@ -516,7 +522,7 @@ class UserPage extends React.Component {
               handleUnblock={this.handleUnblock}
             />
           </div>
-          <TabList handleContent={this.handleContent}></TabList>
+          <TabList handleContent={this.handleContent} />
           {/* content */}
           {content}
         </div>

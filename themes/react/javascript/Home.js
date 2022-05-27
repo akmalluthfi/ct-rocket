@@ -1,7 +1,7 @@
 function SideBar() {
   return (
     <aside className="row position-fixed container p-0 d-none d-lg-flex">
-      <div className="col-auto me-3" style={{ maxWidth: 640, width: "100%" }} />
+      <div className="col-auto me-3" style={{ maxWidth: 640, width: '100%' }} />
       <div className="col">
         <div className="row my-4 align-items-center">
           <div className="col-auto">
@@ -39,7 +39,7 @@ function PostHeader(props) {
           <img
             className="object-fit-cover"
             src={props.author.profileLink}
-            alt={"profile picture " + props.author.username}
+            alt={'profile picture ' + props.author.username}
           />
         </div>
       </a>
@@ -71,18 +71,18 @@ function MultipleImage(props) {
   let carouselButton = props.images.map((value, index) => (
     <button
       key={index}
-      className={index === 0 ? "active" : ""}
+      className={index === 0 ? 'active' : ''}
       type="button"
-      data-bs-target={"#carousel-post-" + props.id}
+      data-bs-target={'#carousel-post-' + props.id}
       data-bs-slide-to={index}
-      aria-label={"Slide" + index + 1}
+      aria-label={'Slide' + index + 1}
     ></button>
   ));
 
   let carouselImages = props.images.map((value, index) => (
     <div
       key={index}
-      className={index === 0 ? "carousel-item active" : "carousel-item"}
+      className={index === 0 ? 'carousel-item active' : 'carousel-item'}
     >
       <div className="ratio ratio-1x1 bg-img-placeholder">
         <img
@@ -96,7 +96,7 @@ function MultipleImage(props) {
 
   return (
     <div
-      id={"carousel-post-" + props.id}
+      id={'carousel-post-' + props.id}
       className="carousel slide carousel-post"
       data-bs-interval="false"
     >
@@ -105,7 +105,7 @@ function MultipleImage(props) {
       <button
         className="carousel-control-prev"
         type="button"
-        data-bs-target={"#carousel-post-" + props.id}
+        data-bs-target={'#carousel-post-' + props.id}
         data-bs-slide="prev"
         onClick={props.handlePrev}
       >
@@ -115,7 +115,7 @@ function MultipleImage(props) {
       <button
         className="carousel-control-next"
         type="button"
-        data-bs-target={"#carousel-post-" + props.id}
+        data-bs-target={'#carousel-post-' + props.id}
         data-bs-slide="next"
         onClick={props.handleNext}
       >
@@ -134,13 +134,13 @@ function PostImage(props) {
   const handleNext = (event) => {
     // console.log(event.target);
     const postCarousel =
-      event.target.parentElement.nodeName === "BUTTON"
+      event.target.parentElement.nodeName === 'BUTTON'
         ? event.target.parentElement.parentElement
         : event.target.parentElement;
 
-    const arrPostCarousel = postCarousel.id.slice("-");
+    const arrPostCarousel = postCarousel.id.slice('-');
     const carouselCaptionId =
-      "carousel-post-caption-" + arrPostCarousel[arrPostCarousel.length - 1];
+      'carousel-post-caption-' + arrPostCarousel[arrPostCarousel.length - 1];
 
     const carouselCaption = new bootstrap.Carousel(
       document.getElementById(carouselCaptionId)
@@ -151,13 +151,13 @@ function PostImage(props) {
 
   const handlePrev = (event) => {
     const postCarousel =
-      event.target.parentElement.nodeName === "BUTTON"
+      event.target.parentElement.nodeName === 'BUTTON'
         ? event.target.parentElement.parentElement
         : event.target.parentElement;
 
-    const arrPostCarousel = postCarousel.id.slice("-");
+    const arrPostCarousel = postCarousel.id.slice('-');
     const carouselCaptionId =
-      "carousel-post-caption-" + arrPostCarousel[arrPostCarousel.length - 1];
+      'carousel-post-caption-' + arrPostCarousel[arrPostCarousel.length - 1];
 
     const carouselCaption = new bootstrap.Carousel(
       document.getElementById(carouselCaptionId)
@@ -209,13 +209,13 @@ function SingleCaption(props) {
   const caption =
     props.image.caption == null
       ? props.caption == null
-        ? ""
+        ? ''
         : props.caption
       : props.image.caption;
 
   const categories = props.categories.map((val, i) => (
     <a key={i} href={val.link} className="text-primary text-decoration-none">
-      {val.title}{" "}
+      {val.title}{' '}
     </a>
   ));
 
@@ -229,18 +229,18 @@ function SingleCaption(props) {
       <div className="card-text">{categories}</div>
       <p className="card-text">
         <span className="fw-bold">{props.author.username} </span>
-        <span className="collapse" id={"collapse-" + props.id}>
+        <span className="collapse" id={'collapse-' + props.id}>
           {caption}
         </span>
         <span className="hide">
-          {caption.length > 5 ? caption.substring(0, 5) + "..." : caption}
+          {caption.length > 5 ? caption.substring(0, 5) + '...' : caption}
         </span>
         <a
           className="fw-light text-decoration-none text-black-50 btn-collapse"
           data-bs-toggle="collapse"
-          data-bs-target={"#collapse-" + props.id}
+          data-bs-target={'#collapse-' + props.id}
           aria-expanded="false"
-          aria-controls={"collapse-" + props.id}
+          aria-controls={'collapse-' + props.id}
           role="button"
           onClick={handleClick}
         >
@@ -254,7 +254,7 @@ function SingleCaption(props) {
 function MultipleCaption(props) {
   const categories = props.categories.map((val, i) => (
     <a key={i} href={val.link} className="text-primary text-decoration-none">
-      {val.title}{" "}
+      {val.title}{' '}
     </a>
   ));
 
@@ -267,22 +267,22 @@ function MultipleCaption(props) {
     return (
       <div
         key={i}
-        className={i == 0 ? "carousel-item active" : "carousel-item"}
+        className={i == 0 ? 'carousel-item active' : 'carousel-item'}
       >
         <p className="card-text">
           <span className="fw-bold">{props.author.username} </span>
-          <span className="collapse" id={"collapse-" + props.id + "-" + i}>
+          <span className="collapse" id={'collapse-' + props.id + '-' + i}>
             {caption}
           </span>
           <span className="hide">
-            {caption.length > 5 ? caption.substring(0, 5) + "..." : caption}
+            {caption.length > 5 ? caption.substring(0, 5) + '...' : caption}
           </span>
           <a
             className="fw-light text-decoration-none text-black-50 btn-collapse"
             data-bs-toggle="collapse"
-            data-bs-target={"#collapse-" + props.id + "-" + i}
+            data-bs-target={'#collapse-' + props.id + '-' + i}
             aria-expanded="false"
-            aria-controls={"collapse-" + props.id + "-" + i}
+            aria-controls={'collapse-' + props.id + '-' + i}
             role="button"
             onClick={handleClick}
           >
@@ -297,7 +297,7 @@ function MultipleCaption(props) {
     const caption =
       val.caption == null
         ? props.caption == null
-          ? ""
+          ? ''
           : props.caption
         : val.caption;
     return listCaption(caption, i);
@@ -308,7 +308,7 @@ function MultipleCaption(props) {
       <div className="card-text">{categories}</div>
 
       <div
-        id={"carousel-post-caption-" + props.id}
+        id={'carousel-post-caption-' + props.id}
         className="carousel slide carousel-post-caption"
         data-bs-interval="false"
         data-bs-touch="false"
@@ -354,12 +354,12 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    fetch(document.baseURI + "post", {
-      method: "GET",
+    fetch(document.baseURI + 'post', {
+      method: 'GET',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "X-Requested-With": "XMLHttpRequest",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
       },
     })
       .then((response) => {
@@ -382,7 +382,7 @@ class Home extends React.Component {
 
     return (
       <div>
-        <Navbar active={"home"} />
+        <Navbar active={'home'} />
         <div className="container">
           <SideBar />
           {listPosts}
@@ -394,4 +394,4 @@ class Home extends React.Component {
   }
 }
 
-ReactDOM.render(<Home />, document.getElementById("root"));
+ReactDOM.render(<Home />, document.getElementById('root'));

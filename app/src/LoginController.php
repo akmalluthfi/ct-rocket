@@ -31,8 +31,8 @@ class LoginController extends Controller
         // cek apakah request dikirim dari ajax
         if (!$request->isAjax()) return $this->httpError(400);
 
-        $credentials = json_decode($request->getBody(), true);
-        // $credentials = $request->postVars();
+        // cek apakah ada data dikirim dari body 
+        $credentials = (empty($request->postVars())) ? json_decode($request->getBody(), true) : $request->postVars();
 
         // cek apakah field username/email ada yang sama
         $user = User::get()->filterAny([

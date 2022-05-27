@@ -1,6 +1,5 @@
 <?php
 
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Assets\Image;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Member;
@@ -30,7 +29,8 @@ class User extends Member
     private static $has_many = [
         'Posts' => Post::class,
         'UserFollowed' => UserFollowed::class,
-        'UserBlock' => UserBlock::class
+        'UserBlock' => UserBlock::class,
+        'Visitors' => Visitor::class
     ];
 
     private static $has_one = [
@@ -71,7 +71,8 @@ class User extends Member
         $followers = UserFollowed::get()->filter([
             'FollowedID' => $this->ID
         ]);
-        return count($followers);
+
+        return $followers->count();
     }
 
     public function isBlocked($userId)

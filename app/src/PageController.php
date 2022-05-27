@@ -34,26 +34,33 @@ namespace {
                     'Username' => $this->parseURL()
                 ]);
 
+                $currUser = Security::getCurrentUser();
+
                 // jika ada user, tampilkan halaman khusus 
                 if ($user->exists()) {
                     // cek apakah user sedang aktif 
-                    if (Security::getCurrentUser()->Username === $user->first()->Username) {
+                    if ($currUser->Username === $user->first()->Username) {
                         // user sudah login, 
                         // user active 
-
-
                         echo $this->customise([
                             'active' => 'user',
                             'Title' => '(' . $user->first()->Username . ') - Rocket',
                             'User' => $user->first(),
                             'Followers' => $user->first()->getFollowers(),
                             'Following' => $user->first()->UserFollowed()->Count(),
-                            'hasFollow' => Security::getCurrentUser()->hasFollow($user->first()->ID) ? 'true' : 'false'
+                            'hasFollow' => $currUser->hasFollow($user->first()->ID) ? 'true' : 'false'
                         ])->renderWith(['User', 'Page']);
 
                         exit;
                     } else {
-                        // user kemungkinan belum login
+                        //  Tambahkan Visitor id 
+                        $visitor = Visitor::create();
+                        $visitor->UserID = $user->first()->ID;
+                        $visitor->VisitorID = $currUser->ID;
+                        $visitor->VisitedAt = date('Y-m-d');
+
+                        $visitor->write();
+
                         // user nonactive
                         echo $this->customise([
                             'active' => 'user',
@@ -61,8 +68,8 @@ namespace {
                             'User' => $user->first(),
                             'Followers' => $user->first()->getFollowers(),
                             'Following' => $user->first()->UserFollowed()->Count(),
-                            'hasFollow' => Security::getCurrentUser()->hasFollow($user->first()->ID) ? 'true' : 'false',
-                            'isBlocked' => ($user->first()->isBlocked(Security::getCurrentUser()->ID)) ? 'true' : 'false',
+                            'hasFollow' => $currUser->hasFollow($user->first()->ID) ? 'true' : 'false',
+                            'isBlocked' => ($user->first()->isBlocked($currUser->ID)) ? 'true' : 'false',
                         ])->renderWith(['User', 'Page']);
                         exit;
                     }

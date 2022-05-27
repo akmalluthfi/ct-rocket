@@ -9,6 +9,11 @@ class Post extends DataObject
 {
     private static $db = [
         'Caption' => 'Varchar',
+        'isAds' => 'Boolean'
+    ];
+
+    private static $defaults = [
+        'isAds' => false,
     ];
 
     private static $many_many = [
