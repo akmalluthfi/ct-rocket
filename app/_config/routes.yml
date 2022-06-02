@@ -13,3 +13,6 @@ SilverStripe\Control\Director:
     'explore': 'ExploreController'
     'test': 'TestController'
     'test/$id/coba': 'TestController'
+    '/': 'HomePageController'
+    'api/posts/$id/$resource/$other': 'API\PostApiController'
+    'api/users/$username/$resource/$other': 'API\UserApiController'

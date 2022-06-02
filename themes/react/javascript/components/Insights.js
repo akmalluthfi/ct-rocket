@@ -21,26 +21,22 @@ function Insights() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const userId = window.User.ID;
-      const url = `http://localhost:8080/MagangCrosstechno/rocket/user/visitors/${userId}?filter=${filterVisitors}`;
+      const username = window.user.name;
+
+      const url = `http://localhost:8080/MagangCrosstechno/rocket/api/users/${username}/visitors?filter=${filterVisitors}`;
 
       try {
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-          },
-        });
+        const response = await fetch(url);
+
         // cek error pada koneksi
         if (!response.ok) throw new Error(response.statusText);
         // cek error pada api
-        const data = await response.json();
-        if (data.status !== 200) throw new Error(data.message);
+        const { success, message, visitors } = await response.json();
+
+        if (!success) throw new Error(message);
 
         // set total results
-        setVisitors(data.totalResults);
+        setVisitors(visitors);
 
         // setstate loading
         setVisitorHelper((prev) => {
@@ -65,29 +61,23 @@ function Insights() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const userId = window.User.ID;
-      const url = `http://localhost:8080/MagangCrosstechno/rocket/user/followers/${userId}?filter=${filterFollowers}`;
+      const username = window.user.name;
 
       try {
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-          },
-        });
+        const response = await fetch(
+          `http://localhost:8080/MagangCrosstechno/rocket/api/users/${username}/followers?filter=${filterFollowers}`
+        );
         // cek error pada koneksi
         if (!response.ok) throw new Error(response.statusText);
         // cek error pada api
         const data = await response.json();
-        if (data.status !== 200) throw new Error(data.message);
+        if (!data.success) throw new Error(data.message);
 
         // set total results
         setFollowers({
-          totalFollowers: data.totalFollowers,
-          filteredFollowers: data.filteredFollowers,
-          filterBy: data.filterBy,
+          totalFollowers: data.followers,
+          filteredFollowers: data.filtered_followers,
+          filterBy: data.filtered_by,
         });
 
         // setstate loading

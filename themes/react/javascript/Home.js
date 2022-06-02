@@ -1,3 +1,14 @@
+function AdsCaption(props) {
+  return (
+    <a href={props.link}>
+      <div className="card-body border ads">
+        Visit Now
+        <i className="bi bi-chevron-right float-end"></i>
+      </div>
+    </a>
+  );
+}
+
 function SideBar() {
   return (
     <aside className="row position-fixed container p-0 d-none d-lg-flex">
@@ -30,7 +41,7 @@ function PostHeader(props) {
     <div className="ps-sm card-header p-3 bg-light d-flex align-items-center">
       <a
         className="card-header-img text-decoration-none"
-        href={props.author.username}
+        href={document.baseURI + props.author.username}
       >
         <div
           className="ratio ratio-1x1 rounded-circle bg-img-placeholder overflow-hidden"
@@ -38,18 +49,21 @@ function PostHeader(props) {
         >
           <img
             className="object-fit-cover"
-            src={props.author.profileLink}
+            src={props.author.avatar_url}
             alt={'profile picture ' + props.author.username}
           />
         </div>
       </a>
       <div className="card-body p-0 ms-3">
         <a
-          href={props.author.username}
-          className="card-title m-0 text-decoration-none"
+          href={document.baseURI + props.author.username}
+          className="card-title m-0 text-decoration-none fw-bold"
         >
           {props.author.username}
         </a>
+        <div className="lh-1" style={{ fontSize: 14 }}>
+          {props.isAds ? 'Sponsored' : ''}
+        </div>
       </div>
     </div>
   );
@@ -180,6 +194,7 @@ function PostImage(props) {
           author={props.author}
           id={props.id}
           categories={props.categories}
+          isAds={props.isAds}
         />
       </div>
     );
@@ -200,6 +215,7 @@ function PostImage(props) {
         caption={props.caption}
         author={props.author}
         categories={props.categories}
+        isAds={props.isAds}
       />
     </div>
   );
@@ -225,28 +241,37 @@ function SingleCaption(props) {
   };
 
   return (
-    <div className="card-body">
-      <div className="card-text">{categories}</div>
-      <p className="card-text">
-        <span className="fw-bold">{props.author.username} </span>
-        <span className="collapse" id={'collapse-' + props.id}>
-          {caption}
-        </span>
-        <span className="hide">
-          {caption.length > 5 ? caption.substring(0, 5) + '...' : caption}
-        </span>
-        <a
-          className="fw-light text-decoration-none text-black-50 btn-collapse"
-          data-bs-toggle="collapse"
-          data-bs-target={'#collapse-' + props.id}
-          aria-expanded="false"
-          aria-controls={'collapse-' + props.id}
-          role="button"
-          onClick={handleClick}
-        >
-          more
-        </a>
-      </p>
+    <div>
+      {props.isAds ? (
+        <AdsCaption
+          link={document.baseURI + props.author.username}
+        ></AdsCaption>
+      ) : (
+        ''
+      )}
+      <div className="card-body">
+        <div className="card-text">{categories}</div>
+        <p className="card-text">
+          <span className="fw-bold">{props.author.username} </span>
+          <span className="collapse" id={'collapse-' + props.id}>
+            {caption}
+          </span>
+          <span className="hide">
+            {caption.length > 5 ? caption.substring(0, 5) + '...' : caption}
+          </span>
+          <a
+            className="fw-light text-decoration-none text-black-50 btn-collapse"
+            data-bs-toggle="collapse"
+            data-bs-target={'#collapse-' + props.id}
+            aria-expanded="false"
+            aria-controls={'collapse-' + props.id}
+            role="button"
+            onClick={handleClick}
+          >
+            more
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
@@ -304,16 +329,23 @@ function MultipleCaption(props) {
   });
 
   return (
-    <div className="card-body">
-      <div className="card-text">{categories}</div>
+    <div>
+      {props.isAds ? (
+        <AdsCaption link={document.baseURI + props.author.username} />
+      ) : (
+        ''
+      )}
+      <div className="card-body">
+        <div className="card-text">{categories}</div>
 
-      <div
-        id={'carousel-post-caption-' + props.id}
-        className="carousel slide carousel-post-caption"
-        data-bs-interval="false"
-        data-bs-touch="false"
-      >
-        <div className="carousel-inner">{captions}</div>
+        <div
+          id={'carousel-post-caption-' + props.id}
+          className="carousel slide carousel-post-caption"
+          data-bs-interval="false"
+          data-bs-touch="false"
+        >
+          <div className="carousel-inner">{captions}</div>
+        </div>
       </div>
     </div>
   );
@@ -321,7 +353,7 @@ function MultipleCaption(props) {
 
 function Post(props) {
   const post = props.post;
-
+  const isAds = post.isAds === 1 ? true : false;
   return (
     <div className="row mt-4 justify-content-center">
       <div
@@ -329,13 +361,13 @@ function Post(props) {
         style={{ zIndex: 0, maxWidth: 640, width: 640 }}
       >
         <div className="mb-4 shadow-sm bg-white border">
-          <PostHeader author={post.author} />
+          <PostHeader author={post.author} isAds={isAds} />
           <PostImage
-            id={props.id}
             author={post.author}
             images={post.images}
             caption={post.caption}
             categories={post.categories}
+            isAds={isAds}
           />
         </div>
       </div>
@@ -353,31 +385,43 @@ class Home extends React.Component {
     };
   }
 
-  componentDidMount() {
-    fetch(document.baseURI + 'post', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        this.setState({
-          posts: data.reverse(),
-        });
+  async componentDidMount() {
+    // filter user = {username}
+    try {
+      const response = await fetch(
+        document.baseURI + 'api/posts?ads=true&user=' + window.User.Name,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        }
+      );
+      // cek apakah koneksi berhasil
+      if (!response.ok) throw new Error(response.statusText);
+
+      // ambil data
+      const data = await response.json();
+
+      // cek hasil dari data
+      if (!data.success) throw new Error(data.message);
+
+      this.setState({
+        posts: data.posts,
+        isLoad: false,
       });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   render() {
-    const posts = this.state.posts.slice();
-    // console.log(posts);
+    const posts = this.state.posts;
 
     const listPosts = posts.map((value, i) => (
-      <Post key={i} post={value} id={i} isLoad={this.state.isLoad} />
+      <Post key={i} post={value} isLoad={this.state.isLoad} />
     ));
 
     return (

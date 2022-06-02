@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\Assets\Image;
+use SilverStripe\Control\Director;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Member;
 use SilverStripe\Forms\CheckboxField;
@@ -28,7 +29,7 @@ class User extends Member
 
     private static $has_many = [
         'Posts' => Post::class,
-        'UserFollowed' => UserFollowed::class,
+        'Followers' => Follower::class,
         'UserBlock' => UserBlock::class,
         'Visitors' => Visitor::class
     ];
@@ -66,15 +67,6 @@ class User extends Member
         return true;
     }
 
-    public function getFollowers()
-    {
-        $followers = UserFollowed::get()->filter([
-            'FollowedID' => $this->ID
-        ]);
-
-        return $followers->count();
-    }
-
     public function isBlocked($userId)
     {
         // cek apakah user ini diblock oleh $userId
@@ -82,5 +74,35 @@ class User extends Member
             if ($blocked->BlockedID === $userId) return true;
         }
         return false;
+    }
+
+    public function getFollowers()
+    {
+        return $this->Followers()->Count();
+    }
+
+    public function followers_url()
+    {
+        return Director::baseURL() . "api/users/$this->Username/followers";
+    }
+
+    public function getFollowing()
+    {
+        return Follower::get()->filter('FollowedID', $this->ID)->count();
+    }
+
+    public function following_url()
+    {
+        return Director::baseURL() . "api/users/$this->Username/following";
+    }
+
+    public function avatar_url()
+    {
+        return $this->Picture()->AbsoluteLink();
+    }
+
+    public function posts_url()
+    {
+        return Director::baseURL() . "api/users/$this->Username/posts";
     }
 }

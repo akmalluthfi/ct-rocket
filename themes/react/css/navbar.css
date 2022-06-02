@@ -33,10 +33,6 @@
   margin-left: -7rem !important;
 }
 
-.user-profile {
-  width: 77px;
-}
-
 @media (max-width: 480px) {
   nav input[type='search'] {
     display: none;

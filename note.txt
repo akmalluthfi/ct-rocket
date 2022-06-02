@@ -68,16 +68,28 @@ lalu pada tabs ads, tampilkan semua post, jika ads true maka centang
 ----------------------------------------------------------
 Refactor Modal User 
 
-Followed
+Follower
 
-userID diikuti oleh 
 db = [
-  UserID : hasil relasi 
-  FollowedID => int
+  UserID => int, {relasi} 
+  FollowedID => int {id user yang mengikuti user ini}
 ]
 
-get user followers 
-$user->Followed()->Count()
+ambil follower 
+User->Followers->Count(), 
 
-get user following 
-Followed::get()->filter('FollowedID', $user->ID)->Count()
+ambil following 
+User->Follow
+
+======================================
+Fixed: 
+relasi user followed {
+  pada saat menambahkan follower baru 
+  pada saat menghapus follower 
+  pada saat mengambil follower
+}
+setiap ads yang tampil dapat tambahan element 
+
+
+##############
+Sorting post yang tampil pada halaman home, tampilkan post hanya dari user yang difollow oleh user tersebut, 

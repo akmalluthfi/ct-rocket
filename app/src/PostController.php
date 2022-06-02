@@ -22,7 +22,8 @@ class PostController extends Controller
     ];
 
     private static $url_handlers = [
-        'GET /' => 'index',
+        'GET /$id!/' => 'getPost',
+        'GET /' => 'getAllPost',
         'POST /' => 'make',
         'byUsername/$Username' => 'getPostsByUserName',
         'PUT $id!/ads' => 'updatePostAds'

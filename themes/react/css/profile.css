@@ -1,0 +1,22 @@
+.profile-picture {
+  width: 77px;
+  height: 77px;
+}
+
+#tab-list .active {
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-black-rgb), var(--bs-text-opacity)) !important;
+  border-top: 1px solid #212529;
+}
+
+#tab-list {
+  --bs-text-opacity: 1;
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+@media (min-width: 768px) {
+  .profile-picture {
+    width: 150px;
+    height: 150px;
+  }
+}

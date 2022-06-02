@@ -4,3 +4,17 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+.ads {
+  margin: -1px !important;
+}
+
+.ads:hover {
+  --bs-bg-opacity: 1;
+  background-color: rgba(
+    var(--bs-primary-rgb),
+    var(--bs-bg-opacity)
+  ) !important;
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
+}

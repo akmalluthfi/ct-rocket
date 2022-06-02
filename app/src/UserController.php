@@ -48,6 +48,7 @@ class UserController extends Controller
 
         $follow->UserID = $_POST['userID'];
         $follow->FollowedID = $_POST['followedID'];
+        $follow->FollowedAt = date('Y-m-d');
 
         try {
             $follow->write();
@@ -245,7 +246,7 @@ class UserController extends Controller
 
         if ($filterByDay === 'today') {
             $filter = [
-                'FollowedAt:PartialMatch' => date('Y-m-d')
+                'FollowedAt' => date('Y-m-d')
             ];
         } else if ($filterByDay === 'last7days') {
             $filter = [
@@ -254,9 +255,10 @@ class UserController extends Controller
             ];
         }
 
-        // cari semua id followers akun ini, lalu filter
-        $followers = $user->UserFollowed();
-        $filteredFollowers = $followers->filter($filter);
+        // cari follower pada user id, dan filter
+        $filter['FollowedID'] = $user->ID;
+
+        $followers = UserFollowed::get()->filter($filter);
 
         // jika ada hitung jumlah followers 
         // followers didapatkan dari menghitung jumlah userId pada tabel UserFollowed
@@ -264,8 +266,8 @@ class UserController extends Controller
         return $this->getResponse()->setBody(json_encode([
             'status' => 200,
             'message' => 'Success',
-            'totalFollowers' => $followers->Count(),
-            'filteredFollowers' => $filteredFollowers->Count(),
+            'totalFollowers' => $user->getFollowers(),
+            'filteredFollowers' => $followers->count(),
             'filterBy' => $filterByDay
         ]));
     }

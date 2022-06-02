@@ -5,8 +5,7 @@ use SilverStripe\ORM\DataObject;
 class UserFollowed extends DataObject
 {
     private static $db = [
-        'UserID' => 'Int', // user 
-        'FollowedID' => 'Int',  // id user yang diikuti
+        'FollowedID' => 'Int',  // id user yang mengikuti
         'FollowedAt' => 'Date' // diikuti pada 
     ];
 

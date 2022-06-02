@@ -30,7 +30,7 @@ function PostItem(props) {
           </div>
           <div className="col-8">
             <div className="card-body">
-              <CategoryTags categories={props.categories} />
+              {/* <CategoryTags categories={props.categories} /> */}
               <p className="card-text">{props.caption}</p>
               <p className="card-text">
                 <small className="text-muted">Last updated 3 mins ago</small>
@@ -61,7 +61,9 @@ function PostItem(props) {
 function Ads() {
   // untuk menyimpan posts
   const [posts, setPosts] = React.useState([]);
-  let author = {};
+  const [author, setAuthor] = React.useState({});
+
+  const [isLoad, setLoad] = React.useState(true);
 
   // untuk menyimpan event click
   const [check, checked] = React.useState({
@@ -70,27 +72,31 @@ function Ads() {
   });
 
   React.useEffect(() => {
-    fetch(document.baseURI + 'post/byUsername/' + window.UserController.Name, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-    })
-      .then(async (response) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          document.baseURI + 'api/users/' + window.user.name + '/posts'
+        );
+
         if (!response.ok) {
           const text = await response.text();
           throw new Error(text);
         }
 
-        return response.json();
-      })
-      .then((data) => {
-        author = data.author;
-        setPosts(data.posts);
-      });
-    console.log('fetch');
+        const data = await response.json();
+
+        if (!data.success) throw new Error(data.message);
+
+        await setAuthor(data.author);
+        await setPosts(data.posts);
+
+        await setLoad(false);
+      } catch (error) {
+        console.log(error);
+        await setLoad(true);
+      }
+    };
+    fetchData();
   }, []);
 
   React.useEffect(() => {
@@ -118,18 +124,18 @@ function Ads() {
 
   let postList;
 
-  if (posts.length > 0) {
+  if (!isLoad) {
     postList = posts.map((post) => {
       // console.log(post.Caption); // can be null
-      const { Link, Caption } = post.Images[0]; // caption can be null
+      const { caption, link } = post.images[0]; // caption can be null
 
       return (
         <PostItem
-          id={post.Id}
-          key={post.Id}
-          categories={post.Categories}
-          caption={post.Caption === null ? Caption : post.Caption}
-          image={Link}
+          id={post.id}
+          key={post.id}
+          categories={post.categories}
+          caption={post.caption === null ? caption : post.caption}
+          image={link}
           isAds={post.isAds}
           handleCheck={checked}
         ></PostItem>

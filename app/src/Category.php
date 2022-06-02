@@ -5,7 +5,7 @@ use SilverStripe\ORM\DataObject;
 class Category extends DataObject
 {
     private static $db = [
-        'Title' => 'Varchar'
+        'Name' => 'Varchar'
     ];
 
     private static $belongs_many_many = [

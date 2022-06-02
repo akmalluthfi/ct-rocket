@@ -2,22 +2,22 @@ class Navbar extends React.Component {
   logout(event) {
     event.preventDefault();
     Swal.fire({
-      icon: "warning",
-      title: "Logging out?",
-      text: "You need to log back in",
+      icon: 'warning',
+      title: 'Logging out?',
+      text: 'You need to log back in',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Logout",
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Logout',
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(document.baseURI + "accounts/logout")
+        fetch(document.baseURI + 'accounts/logout')
           .then((response) => {
             return response.json();
           })
           .then((data) => {
             if (data.status === 200) {
-              document.location.replace(document.baseURI + "accounts/");
+              document.location.replace(document.baseURI + 'accounts/');
             }
             console.error(data.message);
           });
@@ -26,26 +26,26 @@ class Navbar extends React.Component {
   }
 
   componentDidMount() {
-    const dropNav = document.getElementById("navbarDropdown");
-    const navActive = document.querySelector(".nav-link, .active");
+    const dropNav = document.getElementById('navbarDropdown');
+    const navActive = document.querySelector('.nav-link, .active');
 
-    dropNav.addEventListener("show.bs.dropdown", function () {
-      navActive.classList.remove("active");
-      this.children[0].classList.add("active");
+    dropNav.addEventListener('show.bs.dropdown', function () {
+      navActive.classList.remove('active');
+      this.children[0].classList.add('active');
     });
 
-    dropNav.addEventListener("hide.bs.dropdown", function () {
-      navActive.classList.add("active");
-      this.children[0].classList.remove("active");
+    dropNav.addEventListener('hide.bs.dropdown', function () {
+      navActive.classList.add('active');
+      this.children[0].classList.remove('active');
     });
 
-    $("input#search").autocomplete({
-      source: document.baseURI + "post/getPosts",
+    $('input#search').autocomplete({
+      source: document.baseURI + 'post/getPosts',
       select: function (event, ui) {
         let keyword = ui.item.value;
 
-        if (keyword.charAt(0) === "#") {
-          window.location.replace("explore/tags/" + keyword.substring(1));
+        if (keyword.charAt(0) === '#') {
+          window.location.replace('explore/tags/' + keyword.substring(1));
         } else {
           window.location.replace(ui.item.value);
         }
@@ -55,7 +55,7 @@ class Navbar extends React.Component {
 
   homeItem() {
     const useClass =
-      this.props.active === "home" ? "nav-link active" : "nav-link";
+      this.props.active === 'home' ? 'nav-link active' : 'nav-link';
 
     return (
       <li className="nav-item">
@@ -68,9 +68,9 @@ class Navbar extends React.Component {
 
   userItem() {
     const useClass =
-      this.props.active === "user"
-        ? "img-user rounded-circle nav-profile-user object-fit-cover active"
-        : "img-user rounded-circle nav-profile-user object-fit-cover";
+      this.props.active === 'user'
+        ? 'img-user rounded-circle nav-profile-user object-fit-cover active'
+        : 'img-user rounded-circle nav-profile-user object-fit-cover';
 
     return (
       <li className="nav-item dropdown">

@@ -110,7 +110,7 @@ function Profile(props) {
   let verified = '';
   if (isBusinessAccount)
     verified = (
-      <i className="bi bi-patch-check-fill text-primary fs-5 float-end ps-2"></i>
+      <i className="bi bi-patch-check-fill text-primary fs-5 ps-2"></i>
     );
 
   return (
@@ -487,21 +487,21 @@ class UserPage extends React.Component {
       });
   }
 
-  async componentDidMount() {
-    await this.fetchData();
+  // async componentDidMount() {
+  //   await this.fetchData();
 
-    // tambahkan class active pada posts
-    const tabList = document.getElementById('tab-list').children;
-    for (const tab of tabList) {
-      if (tab.dataset.content == this.state.content)
-        tab.classList.add('active');
-    }
-  }
+  //   // tambahkan class active pada posts
+  //   const tabList = document.getElementById('tab-list').children;
+  //   for (const tab of tabList) {
+  //     if (tab.dataset.content == this.state.content)
+  //       tab.classList.add('active');
+  //   }
+  // }
 
   render() {
-    if (this.state.load) {
-      return '';
-    }
+    // if (this.state.load) {
+    //   return '';
+    // }
 
     const content = this.renderContent();
 
